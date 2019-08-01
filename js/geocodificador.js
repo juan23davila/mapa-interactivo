@@ -14,8 +14,8 @@ geocodificadorModulo = (function () {
   }
 
   /**
-   * Obtiene una dirección y con la ayuda de Geocoder API obtiene las cordenadas de esta
-   * @param {dirección a buscar cordenadas} direccion 
+   * Obtiene una dirección y con la ayuda de Geocoder API obtiene las coordenadas de esta
+   * @param {dirección a buscar coordenadas} direccion 
    */
   function generarUrl(direccion){
     let url = "https://maps.googleapis.com/maps/api/geocode/"
@@ -30,17 +30,17 @@ geocodificadorModulo = (function () {
    * Se procesa la información entregada por la API Geocoding
    */
   function procesarRespuesta(textoApi, direccion, funcionALlamar){
-    let objCordenada = JSON.parse(textoApi);
+    let objCoordenada = JSON.parse(textoApi);
 
     //Se valida si la respuesta del API fue buena
-    if(objCordenada.status === "OK"){
-      //Se busca cordenadas en objeto
-      objCordenada.results.forEach(infoAddress => {
+    if(objCoordenada.status === "OK"){
+      //Se busca coordenadas en objeto
+      objCoordenada.results.forEach(infoAddress => {
         let miLatLng = new google.maps.LatLng(infoAddress.geometry["location"]);
         funcionALlamar(direccion, miLatLng)
       });
       //llamar la funcion obtenida como parametro sus respectivos parametros
-      variable = objCordenada;
+      variable = objCoordenada;
     }else{
       alert("No se pudo encontrar dirección");
     }
@@ -64,9 +64,9 @@ geocodificadorModulo = (function () {
      xhttp.send();
   }
 
-    // Inicializo el geocoder que obtiene las corrdenadas a partir de una dirección
+    // Inicializo el geocoder que obtiene las coordenadas a partir de una dirección
     // La variable dirección es igual al texto ingresado por el usuario
-    // Llama a la función usaDirecciin para agregarla a los listados y mostrarlo en el mapa
+    // Llama a la función usaDirección para agregarla a los listados y mostrarlo en el mapa
   function inicializar () {
     var that = this
     geocodificador = new google.maps.Geocoder()

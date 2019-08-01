@@ -7,10 +7,20 @@ marcadorModulo = (function () {
 
     // Crea un marcador y lo muestra en el mapa
   function mostrarMiMarcador (ubicacion) {
-        /* Completar la función mostrarMiMarcador() para crear un marcador
-        en la posición pasada por parámetro y mostrarlo en el mapa.
-        Este marcador debe tener un título, una animación.
-        El marcador que vas a crear debe asignarse a la variable miMarcador */
+    //Quita anteriores marcadores fijados anteriormente
+    if(miMarcador != undefined){
+      miMarcador.setMap(null);
+    }
+
+    // Se crea un nuevo marcador
+    miMarcador = new google.maps.Marker({
+      position: ubicacion,
+      map: mapa,
+      title: document.getElementById("direccion").value,
+      animation: google.maps.Animation.DROP
+    });
+
+    mapa.setZoom(11);
   }
 
     // Agrega la dirección del marcador en la lista de Lugares Intermedios
