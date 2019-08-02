@@ -33,7 +33,7 @@ geocodificadorModulo = (function () {
     let objCoordenada = JSON.parse(textoApi);
 
     //Se valida si la respuesta del API fue buena
-    if(objCoordenada.status === "OK"){
+    if(objCoordenada.status === google.maps.places.PlacesServiceStatus.OK){
       //Se busca coordenadas en objeto
       objCoordenada.results.forEach(infoAddress => {
         let miLatLng = new google.maps.LatLng(infoAddress.geometry["location"]);

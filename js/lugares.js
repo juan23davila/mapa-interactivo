@@ -16,14 +16,21 @@ lugaresModulo = (function () {
     autocompletar()
   }
 
-    // Busca lugares con el tipo especificado en el campo de TipoDeLugar
-
-  function buscarCerca (posicion) {
-        /* Completar la función buscarCerca  que realice la búsqueda de los lugares
-    del tipo (tipodeLugar) y con el radio indicados en el HTML cerca del lugar
-    pasado como parámetro y llame a la función marcarLugares. */
-
+  function obtenerSolicitud(posicion){
+    return {
+      location: posicion,
+      radius: document.getElementById('radio').value,
+      type: document.getElementById('tipoDeLugar').value
+    }
   }
+
+  // Busca lugares con el tipo especificado en el campo de TipoDeLugar
+  function buscarCerca (posicion) {
+     service = new google.maps.places.PlacesService(mapa);
+     let request = obtenerSolicitud(posicion);
+     service.nearbySearch(request, marcadorModulo.marcarLugares);
+  }
+
   return {
     inicializar,
     buscarCerca
