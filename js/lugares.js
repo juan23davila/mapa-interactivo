@@ -4,10 +4,35 @@ lugaresModulo = (function () {
     // Completa las direcciones ingresadas por el usuario a y establece los límites
     // con un círculo cuyo radio es de 20000 metros.
   function autocompletar () {
-        /* Completar la función autocompletar(): autocompleta los 4 campos de texto de la
-        página (las direcciones ingresables por el usuario).
-        Para esto creá un círculo con radio de 20000 metros y usalo para fijar
-        los límites de la búsqueda de dirección. El círculo no se debe ver en el mapa. */
+    var miPosicion;
+
+    if (marcadorModulo.existeMiMarcador()) {
+      var miPosicion = marcadorModulo.damePosicion();
+    } else {
+      miPosicion = posicionCentral;
+    }
+    
+    var circle = new google.maps.Circle( { center: miPosicion,   radius: 20000 }) 
+      
+    var input = document.getElementById('direccion');
+
+    var options = {
+      bounds: circle.getBounds(),
+      types: ['establishment']
+    };
+    
+    autocompleteBuscar = new google.maps.places.Autocomplete(
+                          document.getElementById('direccion'), options
+                         );
+    autocompleteDesde = new google.maps.places.Autocomplete(
+                          document.getElementById('desde'), options
+                        );
+    autocompleteHasta = new google.maps.places.Autocomplete(
+                          document.getElementById('hasta'), options
+                        );
+    autocompleteAgregar = new google.maps.places.Autocomplete(
+                          document.getElementById('agregar'), options
+                        );
   }
 
     // Inicializo la variable servicioLugares y llamo a la función autocompletar
