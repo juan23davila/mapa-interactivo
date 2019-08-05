@@ -7,7 +7,7 @@ marcadorModulo = (function () {
 
     // Crea un marcador y lo muestra en el mapa
   function mostrarMiMarcador (ubicacion) {
-    //Quita anteriores marcadores fijados anteriormente
+    //Quita anterior marcador fijado del mapa
     if(miMarcador != undefined){
       miMarcador.setMap(null);
     }
@@ -25,7 +25,6 @@ marcadorModulo = (function () {
 
     // Agrega la dirección del marcador en la lista de Lugares Intermedios
   function agregarDireccionMarcador (marcador) {
-        // console.log(marcador.getPosition().lat() + ',' + marcador.getPosition().lng());
     var marcadorLatLng = new google.maps.LatLng({ lat: marcador.getPosition().lat(), lng: marcador.getPosition().lng() })
     direccionesModulo.agregarDireccion(marcador.getTitle(), marcadorLatLng)
   }
@@ -37,11 +36,6 @@ marcadorModulo = (function () {
     }
   }
 
-    // Muestra todos los marcadores. Por ahora no la uso
-  function mostrarMarcadores (marcadores) {
-    marcadoresEnMapa(marcadores, mapa)
-  }
-
     // Saca los marcadores del mapa, pero siguen en el Array marcadores.
   function noMostrarMarcadores (marcadores) {
     marcadoresEnMapa(marcadores, null)
@@ -49,8 +43,8 @@ marcadorModulo = (function () {
 
     // Borra todos los marcadores del mapa y del array.
   function borrarMarcadores (marcadores) {
-    noMostrarMarcadores(marcadores)
-    marcadores = []
+    noMostrarMarcadores(marcadores);
+    marcadores = [];
   }
 
     // Borra todos los marcadores del mapa y del array.
@@ -236,7 +230,7 @@ marcadorModulo = (function () {
       miPosicion = posicionCentral
     }
     lugaresModulo.buscarCerca(miPosicion)
-        // cambio el centro del mapa a miPosicion
+    // cambio el centro del mapa a miPosicion
     mapa.panTo(miPosicion)
   }
 

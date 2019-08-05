@@ -13,8 +13,6 @@ lugaresModulo = (function () {
     }
     
     var circle = new google.maps.Circle( { center: miPosicion,   radius: 20000 }) 
-      
-    var input = document.getElementById('direccion');
 
     var options = {
       bounds: circle.getBounds(),

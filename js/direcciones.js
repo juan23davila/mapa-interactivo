@@ -1,6 +1,9 @@
 direccionesModulo = (function () {
   var servicioDirecciones // Servicio que calcula las direcciones
   var mostradorDirecciones // Servicio muestra las direcciones
+  var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var labelIndex = 0;
+  var marcadoresRuta = [];
 
     // Calcula las rutas cuando se cambian los lugares de desde, hasta o algun punto intermedio
   function calcularRutasConClic () {
@@ -48,6 +51,7 @@ direccionesModulo = (function () {
     mapa.setCenter(ubicacion)
     streetViewModulo.fijarStreetView(ubicacion)
     marcadorModulo.mostrarMiMarcador(ubicacion)
+    lugaresModulo.inicializar();
   }
 
   function agregarDireccion (direccion, ubicacion) {
@@ -89,14 +93,86 @@ direccionesModulo = (function () {
     })
   }
 
+  function makeMarker(location) {
+    var marker = new google.maps.Marker({
+      position: location,
+      label: labels[labelIndex++ % labels.length],
+      map: mapa
+    });
+
+    marcadoresRuta.push(marker);
+  }
+
+  function procesarCalculoDeRutas(result, status){
+    console.log(result);
+    if(status === google.maps.places.PlacesServiceStatus.OK){
+      //Se eliminan marcadores anteriores
+      marcadorModulo.borrarMarcadores(marcadoresRuta);
+      marcadoresRuta = [];
+      labelIndex = 0;
+
+      mostradorDirecciones.setDirections(result);
+      for (let index = 0; index < result.routes[0].legs.length; index++) {
+        var leg = result.routes[0].legs[index];
+        if(index === 0){
+          makeMarker(leg.start_location);
+        }
+        makeMarker(leg.end_location);
+      }
+    }else{
+      alert('No se pudo encontrar una ruta para el medio "'+document.getElementById("comoIr").value+'"');
+    }
+  }
+
     // Calcula la ruta entre los puntos Desde y Hasta con los puntosIntermedios
     // dependiendo de la formaDeIr que puede ser Caminando, Auto o Bus/Subterraneo/Tren
   function calcularYMostrarRutas () {
 
-        /* Completar la función calcularYMostrarRutas , que dependiendo de la forma en que el
-         usuario quiere ir de un camino al otro, calcula la ruta entre esas dos posiciones
-         y luego muestra la ruta. */
-  }
+    //Se genera solicitud de ruta
+    if(document.getElementById("desde").value != "" && 
+       document.getElementById("hasta").value != ""
+    ){
+      var medioTrasporte;
+
+      switch (document.getElementById("comoIr").value) {
+        case "Bus/Subterraneo/Tren":
+          medioTrasporte = "TRANSIT";
+          break;
+        case "Caminando":
+          medioTrasporte = "WALKING";
+          break;
+        default:
+          medioTrasporte = "DRIVING";
+          break;
+      }
+
+      var puntosItermedios = document.getElementById("puntosIntermedios").options;
+
+      var waypts = [];
+
+      if(medioTrasporte != "TRANSIT"){
+        for (var i = 0; i < puntosItermedios.length; i++) {
+          if (puntosItermedios[i].selected) {
+            waypts.push({
+              location: puntosItermedios[i].text,
+              stopover: true
+            });
+          }
+        }
+      }
+      
+      // Se muestra el camino en el mapa
+      servicioDirecciones.route({
+        origin: document.getElementById("desde").value,   
+        destination: document.getElementById("hasta").value,   
+        travelMode: medioTrasporte,
+        waypoints:waypts,
+        unitSystem: google.maps.UnitSystem.METRIC
+      }, procesarCalculoDeRutas);
+    }else{
+      alert('los campos de "Desde", "Hasta" y "Como" no pueden estar vacios');
+    }
+  }  
 
   return {
     inicializar,

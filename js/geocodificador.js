@@ -77,7 +77,7 @@ geocodificadorModulo = (function () {
       if (key === 13) { // 13 is enter
                 // code for enter
         var direccion = document.getElementById('direccion').value
-        that.usaDireccion(direccion, direccionesModulo.agregarDireccionYMostrarEnMapa)
+        that.usaDireccion(direccion, direccionesModulo.agregarDireccionYMostrarEnMapa);
       }
     })
   }
