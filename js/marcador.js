@@ -222,13 +222,16 @@ marcadorModulo = (function () {
 
     // Marco los lugares cerca de mi posición
   function marcar () {
-    borrarMarcadores(marcadores)
+    borrarMarcadores(marcadores);
     console.log('lugar: ' + document.getElementById('tipoDeLugar').value)
     if (marcadorModulo.existeMiMarcador()) {
       var miPosicion = marcadorModulo.damePosicion()
     } else {
       miPosicion = posicionCentral
     }
+    //Se reinician marcadores
+    marcadorModulo.inicializar();
+
     lugaresModulo.buscarCerca(miPosicion)
     // cambio el centro del mapa a miPosicion
     mapa.panTo(miPosicion)
