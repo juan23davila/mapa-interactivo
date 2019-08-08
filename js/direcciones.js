@@ -3,7 +3,6 @@ direccionesModulo = (function () {
   var mostradorDirecciones // Servicio muestra las direcciones
   var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   var labelIndex = 0;
-  var marcadoresRuta = [];
 
     // Calcula las rutas cuando se cambian los lugares de desde, hasta o algun punto intermedio
   function calcularRutasConClic () {
@@ -93,31 +92,20 @@ direccionesModulo = (function () {
     })
   }
 
-  function makeMarker(location) {
-    var marker = new google.maps.Marker({
-      position: location,
-      label: labels[labelIndex++ % labels.length],
-      map: mapa
-    });
-
-    marcadoresRuta.push(marker);
-  }
-
   function procesarCalculoDeRutas(result, status){
-    console.log(result);
     if(status === google.maps.places.PlacesServiceStatus.OK){
-      //Se eliminan marcadores anteriores
-      marcadorModulo.borrarMarcadores(marcadoresRuta);
-      marcadoresRuta = [];
       labelIndex = 0;
-
+      //Se renderiza la ruta
       mostradorDirecciones.setDirections(result);
+
+      //Se ubican nuevamente los marcadores
+      marcadorModulo.borrarMarcadoresRuta();
       for (let index = 0; index < result.routes[0].legs.length; index++) {
         var leg = result.routes[0].legs[index];
         if(index === 0){
-          makeMarker(leg.start_location);
+          marcadorModulo.agregarMarcadorRuta (leg.start_location, labels[labelIndex++ % labels.length], true);
         }
-        makeMarker(leg.end_location);
+        marcadorModulo.agregarMarcadorRuta (leg.end_location, labels[labelIndex++ % labels.length], false);
       }
     }else{
       alert('No se pudo encontrar una ruta para el medio "'+document.getElementById("comoIr").value+'"');
@@ -160,6 +148,10 @@ direccionesModulo = (function () {
           }
         }
       }
+
+      //Se elimina ruta pintada anteriormente
+      mostradorDirecciones.setMap(null);
+      mostradorDirecciones.setMap(mapa);
       
       // Se muestra el camino en el mapa
       servicioDirecciones.route({
@@ -170,7 +162,7 @@ direccionesModulo = (function () {
         unitSystem: google.maps.UnitSystem.METRIC
       }, procesarCalculoDeRutas);
     }else{
-      alert('los campos de "Desde", "Hasta" y "Como" no pueden estar vacios');
+      alert('los campos de "Desde" y "Hasta" no pueden estar vacios');
     }
   }  
 
